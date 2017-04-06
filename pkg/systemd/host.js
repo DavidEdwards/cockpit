@@ -224,7 +224,6 @@ PageServer.prototype = {
         this.server_time = null;
         this.client = null;
         this.hostname_proxy = null;
-        this.title_proxy = null;
     },
 
     getTitle: function() {
@@ -430,7 +429,6 @@ PageServer.prototype = {
         self.client = cockpit.dbus('org.freedesktop.hostname1');
         self.hostname_proxy = self.client.proxy('org.freedesktop.hostname1',
                                      '/org/freedesktop/hostname1');
-        self.title_proxy = self.client.proxy(this, '/org/freedesktop/title1');
         self.kernel_hostname = null;
 
         var series;
@@ -617,8 +615,8 @@ PageServer.prototype = {
             });
         $(self.hostname_proxy).on("changed", hostname_text);
 
-        if (!self.title_proxy) {
-            $("#system-title-link").text(self.title_proxy.StaticTitle);
+        if (self.hostname_proxy) {
+            $("#system-title-link").text(self.hostname_proxy.StaticTitle);
         }
     },
 
@@ -930,7 +928,7 @@ PageSystemInformationChangeTitle.prototype = {
     enter: function() {
         var self = this;
         
-        self.title_proxy = PageSystemInformationChangeTitle.client.proxy();
+        self.hostname_proxy = PageSystemInformationChangeTitle.client.proxy();
 
         self._initial_title = self.title || "";
         $("#sich-title").val(self._initial_title);
@@ -943,7 +941,7 @@ PageSystemInformationChangeTitle.prototype = {
     },
 
     leave: function() {
-        this.title_proxy = null;
+        this.hostname_proxy = null;
     },
 
     _on_apply_button: function(event) {
@@ -951,7 +949,7 @@ PageSystemInformationChangeTitle.prototype = {
 
         var new_title = $("#sich-title").val();
 
-        var one = self.title_proxy.call("SetStaticTitle", [new_title, true]);
+        var one = self.hostname_proxy.call("SetStaticTitle", [new_title, true]);
         $("#system_information_change_title").dialog("promise", cockpit.all(one));
     },
 

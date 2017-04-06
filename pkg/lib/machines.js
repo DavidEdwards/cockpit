@@ -471,7 +471,7 @@
             if (!machine.color)
                 overlay.color = machines.unused_color();
 
-            var label = props.PrettyHostname || props.StaticHostname;
+            var label = props.StaticTitle || props.PrettyHostname || props.StaticHostname;
             if (label && label !== machine.label)
                 overlay.label = label;
 

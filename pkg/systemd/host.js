@@ -224,6 +224,7 @@ PageServer.prototype = {
         this.server_time = null;
         this.client = null;
         this.hostname_proxy = null;
+        this.title_proxy = null;
     },
 
     getTitle: function() {
@@ -429,6 +430,7 @@ PageServer.prototype = {
         self.client = cockpit.dbus('org.freedesktop.hostname1');
         self.hostname_proxy = self.client.proxy('org.freedesktop.hostname1',
                                      '/org/freedesktop/hostname1');
+        self.title_proxy = self.client.proxy(this, '/org/freedesktop/title1');
         self.kernel_hostname = null;
 
         var series;
@@ -615,7 +617,9 @@ PageServer.prototype = {
             });
         $(self.hostname_proxy).on("changed", hostname_text);
 
-        $("#system-title-link").text(self.title_proxy.StaticTitle);
+        if (!self.title_proxy) {
+            $("#system-title-link").text(self.title_proxy.StaticTitle);
+        }
     },
 
     show: function() {

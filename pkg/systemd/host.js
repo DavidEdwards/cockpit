@@ -270,6 +270,7 @@ PageServer.prototype = {
         });
 
         $('#system-title-link').on('click', function() {
+            PageSystemInformationChangeTitle.client = self.client;
             $('#system_information_change_title').modal('show');
         });
 
@@ -614,8 +615,7 @@ PageServer.prototype = {
             });
         $(self.hostname_proxy).on("changed", hostname_text);
 
-//      TODO: Set the default / current title when loading
-//        $("#system-title-link").text(...);
+        $("#system-title-link").text(self.title_proxy.StaticTitle);
     },
 
     show: function() {
@@ -910,6 +910,87 @@ PageSystemInformationChangeHostname.prototype = {
 };
 
 function PageSystemInformationChangeHostname() {
+    this._init();
+}
+
+PageSystemInformationChangeTitle.prototype = {
+    _init: function() {
+        this.id = "system_information_change_title";
+    },
+
+    setup: function() {
+        $("#sich-title").on("input change", $.proxy(this._on_title_changed, this));
+        $("#sich-apply-title-button").on("click", $.proxy(this._on_apply_button, this));
+    },
+
+    enter: function() {
+        var self = this;
+        
+        self.title_proxy = PageSystemInformationChangeTitle.client.proxy();
+
+        self._initial_title = self.title || "";
+        $("#sich-title").val(self._initial_title);
+
+        this._update();
+    },
+
+    show: function() {
+        $("#sich-title").focus();
+    },
+
+    leave: function() {
+        this.title_proxy = null;
+    },
+
+    _on_apply_button: function(event) {
+        var self = this;
+
+        var new_title = $("#sich-title").val();
+
+        var one = self.title_proxy.call("SetStaticTitle", [new_title, true]);
+        $("#system_information_change_title").dialog("promise", cockpit.all(one));
+    },
+
+    _on_title_changed: function(event) {
+        this._update();
+    },
+
+    _update: function() {
+        var apply_button = $("#sich-apply-button");
+        var note1 = $("#sich-title-note-1");
+        var changed = false;
+        var valid = false;
+        var can_apply = false;
+
+        var lengthError = _("Title must be 64 characters or less");
+
+        var validLength = $("#sich-title").val().length <= 64;
+        var hostname = $("#sich-title").val();
+
+        if ((hostname != this._initial_title) &&
+            (hostname !== ""))
+            changed = true;
+
+        if (validLength)
+            valid = true;
+
+        if (changed && valid)
+            can_apply = true;
+
+        if (valid) {
+            $(note1).css("visibility", "hidden");
+            $("#sich-hostname-error").removeClass("has-error");
+        } else if(!validLength) {
+            $("#sich-hostname-error").addClass("has-error");
+            $(note1).text(lengthError);
+            $(note1).css("visibility", "visible");
+        }
+
+        apply_button.prop('disabled', !can_apply);
+    }
+};
+
+function PageSystemInformationChangeTitle() {
     this._init();
 }
 

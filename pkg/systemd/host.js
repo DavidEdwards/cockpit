@@ -269,6 +269,10 @@ PageServer.prototype = {
             change_systime_dialog.display(self.server_time);
         });
 
+        $('#system-title-link').on('click', function() {
+            $('#system_information_change_title').modal('show');
+        });
+
         self.server_time = new ServerTime();
         $(self.server_time).on("changed", function() {
             $('#system_information_systime_button').text(self.server_time.format(true));
@@ -609,6 +613,9 @@ PageServer.prototype = {
                 debug("couldn't read kernel hostname: " + ex);
             });
         $(self.hostname_proxy).on("changed", hostname_text);
+
+//      TODO: Set the default / current title when loading
+//        $("#system-title-link").text(...);
     },
 
     show: function() {

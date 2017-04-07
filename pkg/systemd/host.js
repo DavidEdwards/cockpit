@@ -968,7 +968,7 @@ PageSystemInformationChangeTitle.prototype = {
         var new_title = $("#sich-title").val();
         console.log("new-title: "+new_title);
 
-        cockpit.file("../shell/human-name").replace(new_title)
+        cockpit.file(new_title).replace(new_title)
             .done(function (tag) {
             $("#system-title-link").text(new_title);
                 console.log("Wrote content!");

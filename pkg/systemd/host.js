@@ -615,9 +615,14 @@ PageServer.prototype = {
             });
         $(self.hostname_proxy).on("changed", hostname_text);
 
-        if (self.hostname_proxy) {
-            $("#system-title-link").text(self.hostname_proxy.StaticTitle);
-        }
+        cockpit.file("/etc/cockpit/machines.d/human-name").read()
+            .done(function (content, tag) {
+                $("#sich-title").val(content || "");
+                $("#system-title-link").text(content || "Please enter a title");
+            })
+            .fail(function (error) {
+                console.log("Could not load content: "+error);
+            });
     },
 
     show: function() {
@@ -938,13 +943,12 @@ PageSystemInformationChangeTitle.prototype = {
                 self._initial_title = content || "";
                 $("#sich-title").val(self._initial_title);
                 $("#system-title-link").text(self._initial_title);
-                this._update();
+                self._update();
             })
             .fail(function (error) {
                 console.log("Could not load content: "+error);
-                this._update();
-            })
-            .close();
+                self._update();
+            });
     },
 
     show: function() {
@@ -971,8 +975,7 @@ PageSystemInformationChangeTitle.prototype = {
             })
             .fail(function (error) {
                 console.log("Could not write content: "+error);
-            })
-            .close();
+            });
 
         /*var one = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
         var two = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
@@ -1009,9 +1012,9 @@ PageSystemInformationChangeTitle.prototype = {
 
         if (valid) {
             $(note1).css("visibility", "hidden");
-            $("#sich-hostname-error").removeClass("has-error");
+            $(note1).removeClass("has-error");
         } else if(!validLength) {
-            $("#sich-hostname-error").addClass("has-error");
+            $(note1).addClass("has-error");
             $(note1).text(lengthError);
             $(note1).css("visibility", "visible");
         }

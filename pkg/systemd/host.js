@@ -959,6 +959,7 @@ PageSystemInformationChangeTitle.prototype = {
         cockpit.file("machine-title").replace(new_title)
             .done(function (tag) {
                 $("#system-title-link").text(new_title);
+                $("#"+self.id).modal("hide");
             })
             .fail(function (ex) {
                 debug("couldn't write machine title to file: " + ex);

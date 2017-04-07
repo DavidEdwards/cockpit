@@ -956,8 +956,9 @@ PageSystemInformationChangeTitle.prototype = {
         var new_title = $("#sich-title").val();
         console.log("new-title: "+new_title);
 
-        var one = self.hostname_proxy.call("SetStaticTitle", [new_title, true]);
-        $("#system_information_change_title").dialog("promise", cockpit.all(one));
+        var one = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
+        var two = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
+        $("#system_information_change_title").dialog("promise", cockpit.all(one, two));
     },
 
     _on_title_changed: function(event) {

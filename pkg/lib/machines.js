@@ -667,6 +667,9 @@
                         host_props[prop] = wrapped[host][prop].v;
                     data_unwrap[host] = host_props;
                 }
+                console.log("--------------");
+                console.log(data_unwrap);
+                console.log("----------");
 
                 machines.data(data_unwrap);
                 if (!session_loaded)

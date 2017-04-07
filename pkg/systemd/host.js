@@ -967,7 +967,7 @@ PageSystemInformationChangeTitle.prototype = {
 
     _update: function() {
         console.log("update");
-        var apply_button = $("#sich-apply-button");
+        var apply_button = $("#sich-apply-title-button");
         var note1 = $("#sich-title-note-1");
         var changed = false;
         var valid = false;

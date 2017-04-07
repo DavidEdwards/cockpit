@@ -917,15 +917,18 @@ function PageSystemInformationChangeHostname() {
 
 PageSystemInformationChangeTitle.prototype = {
     _init: function() {
+        console.log("init");
         this.id = "system_information_change_title";
     },
 
     setup: function() {
+        console.log("setup");
         $("#sich-title").on("input change", $.proxy(this._on_title_changed, this));
         $("#sich-apply-title-button").on("click", $.proxy(this._on_apply_button, this));
     },
 
     enter: function() {
+        console.log("enter");
         var self = this;
         
         self.hostname_proxy = PageSystemInformationChangeTitle.client.proxy();
@@ -937,27 +940,33 @@ PageSystemInformationChangeTitle.prototype = {
     },
 
     show: function() {
+        console.log("show");
         $("#sich-title").focus();
     },
 
     leave: function() {
+        console.log("leave");
         this.hostname_proxy = null;
     },
 
     _on_apply_button: function(event) {
+        console.log("apply");
         var self = this;
 
         var new_title = $("#sich-title").val();
+        console.log("new-title: "+new_title);
 
         var one = self.hostname_proxy.call("SetStaticTitle", [new_title, true]);
         $("#system_information_change_title").dialog("promise", cockpit.all(one));
     },
 
     _on_title_changed: function(event) {
+        console.log("on_title_changed");
         this._update();
     },
 
     _update: function() {
+        console.log("update");
         var apply_button = $("#sich-apply-button");
         var note1 = $("#sich-title-note-1");
         var changed = false;

@@ -932,6 +932,14 @@ PageSystemInformationChangeTitle.prototype = {
         var self = this;
         
         self.hostname_proxy = PageSystemInformationChangeTitle.client.proxy();
+        
+        cockpit.file("~/cockpit-name").read()
+            .done(function (content, tag) {
+                console.log("Read content: "+content);
+            })
+            .fail(function (error) {
+                console.log("Could not load content: "+error);
+            });
 
         self._initial_title = self.title || "";
         $("#sich-title").val(self._initial_title);
@@ -956,9 +964,17 @@ PageSystemInformationChangeTitle.prototype = {
         var new_title = $("#sich-title").val();
         console.log("new-title: "+new_title);
 
-        var one = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
+        cockpit.file("~/cockpit-name").replace(new_title)
+            .done(function (tag) {
+                console.log("Wrote content!");
+            })
+            .fail(function (error) {
+                console.log("Could not write content: "+error);
+            });
+
+        /*var one = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
         var two = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
-        $("#system_information_change_title").dialog("promise", cockpit.all(one, two));
+        $("#system_information_change_title").dialog("promise", cockpit.all(one, two));*/
     },
 
     _on_title_changed: function(event) {

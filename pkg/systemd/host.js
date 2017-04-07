@@ -615,13 +615,13 @@ PageServer.prototype = {
             });
         $(self.hostname_proxy).on("changed", hostname_text);
 
-        cockpit.file("../shell/human-name").read()
+        cockpit.file("machine-title").read()
             .done(function (content, tag) {
                 $("#sich-title").val(content || "");
-                $("#system-title-link").text(content || "Please enter a title");
+                $("#system-title-link").text(content || _("Please enter a title"));
             })
-            .fail(function (error) {
-                console.log("Could not load content: "+error);
+            .fail(function (ex) {
+                debug("couldn't read machine title: " + ex);
             });
     },
 
@@ -922,68 +922,53 @@ function PageSystemInformationChangeHostname() {
 
 PageSystemInformationChangeTitle.prototype = {
     _init: function() {
-        console.log("init");
         this.id = "system_information_change_title";
     },
 
     setup: function() {
-        console.log("setup");
         $("#sich-title").on("input change", $.proxy(this._on_title_changed, this));
         $("#sich-apply-title-button").on("click", $.proxy(this._on_apply_button, this));
     },
 
     enter: function() {
-        console.log("enter");
         var self = this;
         
-        self.hostname_proxy = PageSystemInformationChangeTitle.client.proxy();
-        
-        cockpit.file("../shell/human-name").read()
+        cockpit.file("machine-title").read()
             .done(function (content, tag) {
                 self._initial_title = content || "";
                 $("#sich-title").val(self._initial_title);
-                $("#system-title-link").text(content || "Please enter a title");
+                $("#system-title-link").text(content || _("Please enter a title"));
                 self._update();
             })
             .fail(function (error) {
-                console.log("Could not load content: "+error);
+                $("#system-title-link").text(_("Please enter a title"));
                 self._update();
             });
     },
 
     show: function() {
-        console.log("show");
         $("#sich-title").focus();
     },
 
     leave: function() {
-        console.log("leave");
-        this.hostname_proxy = null;
     },
 
     _on_apply_button: function(event) {
-        console.log("apply");
-        //var self = this;
-
         var new_title = $("#sich-title").val();
-        console.log("new-title: "+new_title);
 
-        cockpit.file(new_title).replace(new_title)
+        cockpit.file("machine-title").replace(new_title)
             .done(function (tag) {
-            $("#system-title-link").text(new_title);
-                console.log("Wrote content!");
+                $("#system-title-link").text(new_title);
             })
-            .fail(function (error) {
-                console.log("Could not write content: "+error);
+            .fail(function (ex) {
+                debug("couldn't write machine title to file: " + ex);
+                var note1 = $("#sich-title-note-1");
+                $(note1).addClass("has-error");
+                $(note1).text(_("Could not write title to file: "+ex));
             });
-
-        /*var one = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
-        var two = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
-        $("#system_information_change_title").dialog("promise", cockpit.all(one, two));*/
     },
 
     _on_title_changed: function(event) {
-        console.log("on_title_changed");
         this._update();
     },
 

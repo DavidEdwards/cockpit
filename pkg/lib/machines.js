@@ -474,6 +474,11 @@
             var label = props.PrettyHostname || props.StaticHostname;
             if (label && label !== machine.label)
                 overlay.label = label;
+            
+            cockpit.file("machine-title").read()
+                .done(function (content, tag) {
+                    overlay.label = content;
+                });
 
             var os = props.OperatingSystemPrettyName;
             if (os && os != machine.os)

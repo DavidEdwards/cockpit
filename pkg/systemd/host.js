@@ -959,7 +959,7 @@ PageSystemInformationChangeTitle.prototype = {
 
     _on_apply_button: function(event) {
         console.log("apply");
-        var self = this;
+        //var self = this;
 
         var new_title = $("#sich-title").val();
         console.log("new-title: "+new_title);

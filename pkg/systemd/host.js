@@ -615,7 +615,7 @@ PageServer.prototype = {
             });
         $(self.hostname_proxy).on("changed", hostname_text);
 
-        cockpit.file("$HOME/human-name").read()
+        cockpit.file("../shell/human-name").read()
             .done(function (content, tag) {
                 $("#sich-title").val(content || "");
                 $("#system-title-link").text(content || "Please enter a title");
@@ -938,7 +938,7 @@ PageSystemInformationChangeTitle.prototype = {
         
         self.hostname_proxy = PageSystemInformationChangeTitle.client.proxy();
         
-        cockpit.file("$HOME/human-name").read()
+        cockpit.file("../shell/human-name").read()
             .done(function (content, tag) {
                 self._initial_title = content || "";
                 $("#sich-title").val(self._initial_title);
@@ -968,7 +968,7 @@ PageSystemInformationChangeTitle.prototype = {
         var new_title = $("#sich-title").val();
         console.log("new-title: "+new_title);
 
-        cockpit.file("$HOME/human-name").replace(new_title)
+        cockpit.file("../shell/human-name").replace(new_title)
             .done(function (tag) {
             $("#system-title-link").text(new_title);
                 console.log("Wrote content!");

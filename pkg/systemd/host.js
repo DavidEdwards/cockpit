@@ -1690,6 +1690,7 @@ function init() {
     memory_page = new PageMemoryStatus();
 
     dialog_setup(new PageSystemInformationChangeHostname());
+    dialog_setup(new PageSystemInformationChangeTitle());
     dialog_setup(change_systime_dialog = new PageSystemInformationChangeSystime());
 
     $(cockpit).on("locationchanged", navigate);

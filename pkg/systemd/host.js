@@ -933,18 +933,18 @@ PageSystemInformationChangeTitle.prototype = {
         
         self.hostname_proxy = PageSystemInformationChangeTitle.client.proxy();
         
-        cockpit.file("/tmp/cockpit-name").read()
+        cockpit.file("/etc/cockpit/machines.d/human-name").read()
             .done(function (content, tag) {
-                console.log("Read content: "+content);
+                self._initial_title = content || "";
+                $("#sich-title").val(self._initial_title);
+                $("#system-title-link").text(self._initial_title);
+                this._update();
             })
             .fail(function (error) {
                 console.log("Could not load content: "+error);
-            });
-
-        self._initial_title = self.title || "";
-        $("#sich-title").val(self._initial_title);
-
-        this._update();
+                this._update();
+            })
+            .close();
     },
 
     show: function() {
@@ -964,13 +964,15 @@ PageSystemInformationChangeTitle.prototype = {
         var new_title = $("#sich-title").val();
         console.log("new-title: "+new_title);
 
-        cockpit.file("/tmp/cockpit-name").replace(new_title)
+        cockpit.file("/etc/cockpit/machines.d/human-name").replace(new_title)
             .done(function (tag) {
+            $("#system-title-link").text(new_title);
                 console.log("Wrote content!");
             })
             .fail(function (error) {
                 console.log("Could not write content: "+error);
-            });
+            })
+            .close();
 
         /*var one = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);
         var two = self.hostname_proxy.call("SetPrettyHostname", [new_title, true]);

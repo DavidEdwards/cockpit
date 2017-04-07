@@ -933,7 +933,7 @@ PageSystemInformationChangeTitle.prototype = {
         
         self.hostname_proxy = PageSystemInformationChangeTitle.client.proxy();
         
-        cockpit.file("~/cockpit-name").read()
+        cockpit.file("/tmp/cockpit-name").read()
             .done(function (content, tag) {
                 console.log("Read content: "+content);
             })
@@ -964,7 +964,7 @@ PageSystemInformationChangeTitle.prototype = {
         var new_title = $("#sich-title").val();
         console.log("new-title: "+new_title);
 
-        cockpit.file("~/cockpit-name").replace(new_title)
+        cockpit.file("/tmp/cockpit-name").replace(new_title)
             .done(function (tag) {
                 console.log("Wrote content!");
             })

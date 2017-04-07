@@ -954,6 +954,8 @@ PageSystemInformationChangeTitle.prototype = {
     },
 
     _on_apply_button: function(event) {
+        var self = this;
+        
         var new_title = $("#sich-title").val();
 
         cockpit.file("machine-title").replace(new_title)
